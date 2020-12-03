@@ -1,2 +1,2 @@
-# Login/Sigup Formulier
- Een standaard template voor het maken van beveiligde login en signup formulieren
+# Login/Sigup Template
+A PHP template for login and signup systems.
