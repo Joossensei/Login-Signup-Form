@@ -14,6 +14,7 @@
 		<div class="inputmenu">
                 <input type="text" name="mailuid" class="inputtext" placeholder="E-mail/Username">
                 <input type="password" name="pwd" class="inputtext" placeholder="Password">
+                <div class="g-recaptcha" data-sitekey="PUBLIC KEY"></div>
                 <button type="submit" name="login-submit">Login</button>
 			<p style="font-size: 12px">Nieuw Account, <a href="signup.php" value="signup">Klik hier</a></p>
 			</div>
