@@ -1,51 +1,59 @@
 <?php
-if (isset($succes) || isset($error)) {
-    $succes = $_GET['signup'];
-    $error = $_GET['error'];
-
-    if ($succes == "succes") {
-        $message = "U heeft uw account aan gemaakt!";
-    } elseif ($error == "emptyfields") {
-        $message = "Er is een leeg veld!";
-    } elseif ($error == "invalidmailuid") {
-        $message = "Onjuiste gebruikersnaam/Mail!";
-    } elseif ($error == "invalidmail") {
-        $message = "Onjuiste Mail!";
-    } elseif ($error == "invaliduid") {
-        $message = "Onjuiste gebruikersnaam!";
-    } elseif ($error == "passwordcheck") {
-        $message = "Wachtwoorden komen niet overeen!";
-    } elseif ($error == "sqlerror") {
-        $message = "Er gaat iets fout (╯°□°）╯︵ ┻━┻ dit komt niet door u!";
-    } elseif ($error == "usertaken") {
-        $message = "Gebruikersnaam is al in gebruik!";
-    }
-}
+  require_once('includes/header.php');
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="../js/accountcreation.js"></script>
-    <link rel="stylesheet" href="../cs/style.css">
-    <title>Maak een account aan</title>
-</head>
-<body>
-<form class="form-signup" action="signup.inc.php" method="post">
-    <fieldset>
-        <legend>Account Aanmaken!</legend>
-        <div class="inputmenu">
-            <input type="text" name="uid" class="inputtext" placeholder="Username">
-            <input type="text" name="mail" class="inputtext" placeholder="E-Mail">
-            <input type="password" name="pwd" class="inputtext" placeholder="Password">
-            <input type="password" name="pwd-repeat" class="inputtext" placeholder="Repeat Password">
-            <button type="submit" name="signup-submit">Maak een Account aan!</button>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 m-auto">
+            <div class="card mt-5">
+                <div class="card-title">
+                    <h2 class="text-center py-4"> Maak Account aan! </h2>
+                    <hr>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <?php form_validation(); ?>
+                        <div id="success_msg"></div>
+                        <form method="post">
+                            <!-- Voornaam -->
+                            <div class="form-group">
+                                <label for="voorNaam">Voornaam</label>
+                                <input type="text" name="FName" class="form-control" id="voorNaam">
+                            </div>
+                            <!-- Achternaam -->
+                            <div class="form-group">
+                                <label for="achterNaam">Achternaam</label>
+                                <input type="text" name="LName" class="form-control" id="achterNaam">
+                            </div>
+                            <div class="form-group">
+                                <label for="achterNaam">Gebruikersnaam</label>
+                                <input type="text" name="UName" class="form-control" id="Gebruikersnaam">
+                            </div>
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" name="Email" class="form-control" id="email" aria-describedby="emailHelp">
+                            </div>
+                            <!-- Wachtwoord -->
+                            <div class="form-group">
+                                <label for="wachtwoord">Wachtwoord</label>
+                                <input type="password" class="form-control" name="password" id="wachtwoord">
+                            </div>
+                            <!-- wachtwoordHerh -->
+                            <div class="form-group">
+                                <label for="wachtwoordHerh">Wachtwoord herhalen</label>
+                                <input type="password" class="form-control" name="cpassword" id="wachtwoordHerh">
+                            </div>
+                            <div class="captcha_wrapper">
+ 		                           <div class="g-recaptcha" data-sitekey="6Lf7GeIZAAAAAM_3-kAtz53f_8T-41g6xei8MD_d"></div>
+ 	                         </div>
+                            <button type="submit" name="btn_signup" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p><?php
-            $message
-            ?></p>
-    </fieldset>
-</form>
-</body>
+    </div>
+</div>
+
+  </body>
 </html>
