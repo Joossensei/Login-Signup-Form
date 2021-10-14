@@ -87,7 +87,7 @@ function form_validation()
 
 	$url = 'https://www.google.com/recaptcha/api/siteverify';
 	$data = array(
-		'secret' => '6Lf7GeIZAAAAAPY3IHo_jyVR0AdeRVWcCtOYS7-t',
+		'secret' => 'YOUR_SECRET_KEY',
 		'response' => $_POST["g-recaptcha-response"]
 	);
 	$options = array(
@@ -174,7 +174,7 @@ function user_registration($FirstName,$LastName,$UserName,$Email,$Password)
 
 	$url = 'https://www.google.com/recaptcha/api/siteverify';
 	$data = array(
-		'secret' => '6Lf7GeIZAAAAAPY3IHo_jyVR0AdeRVWcCtOYS7-t',
+		'secret' => 'YOUR_SECRET_KEY',
 		'response' => $_POST["g-recaptcha-response"]
 	);
 	$options = array(
