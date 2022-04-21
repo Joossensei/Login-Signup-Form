@@ -22,9 +22,9 @@ function display_message(){
 
 
 //Error display
-function Error_Display($Error)
+function error_display($error)
 {
-  return '<div class="alert alert-danger">' . $Error . '</div>';
+  return '<div class="alert alert-danger">' . $error . '</div>';
 }
 
 /* ------------------------------- FORM CHECKS ------------------------------ */
@@ -37,15 +37,15 @@ function token_generator()
 }
 
 //Check of het email adres bestaat
-function Email_Exist($Email)
+function email_exist($email)
 {
   global $mysqli;
-  $query = "SELECT * FROM users WHERE Email=?";
+  $query = "SELECT * FROM users WHERE email=?";
   $stmt = mysqli_stmt_init($mysqli);
   if (!mysqli_stmt_prepare($stmt, $query)) {
     return false;
   } else {
-    mysqli_stmt_bind_param($stmt, "s", $Email);
+    mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     $resultCheck = mysqli_stmt_num_rows($stmt);
@@ -56,15 +56,15 @@ function Email_Exist($Email)
 }
 
 //Check of de gebruikersnaam bestaat
-function User_Exists($User)
+function user_exists($user)
 {
   global $mysqli;
-  $sql = "SELECT UserName FROM users WHERE UserName=?";
+  $sql = "SELECT username FROM users WHERE username=?";
   $stmt = mysqli_stmt_init($mysqli);
   if (!mysqli_stmt_prepare($stmt, $sql)){
     return false;
   } else {
-    mysqli_stmt_bind_param($stmt, "s", $User);
+    mysqli_stmt_bind_param($stmt, "s", $user);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     $resultCheck = mysqli_stmt_num_rows($stmt);
@@ -75,15 +75,15 @@ function User_Exists($User)
 }
 
 //Verstuur email functie
-function Send_Email($Email,$Subject,$msg,$Header)
+function send_email($email, $subject, $msg, $header)
 {
-   return mail($Email,$Subject,$msg,$Header);
+   return mail($email, $subject, $msg, $header);
 }
 
 //Formulier check
 function form_validation()
 {
-  $response = $_POST["g-recaptcha-response"];
+  	$response = $_POST["g-recaptcha-response"];
 
 	$url = 'https://www.google.com/recaptcha/api/siteverify';
 	$data = array(
@@ -103,72 +103,63 @@ function form_validation()
 	if ($captcha_success->success==false) {
 		return false;
 	} else if ($captcha_success->success==true) {
-  if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['btn_signup'])) {
-      $FirstName = $_POST['FName'];
-      $LastName = $_POST['LName'];
-      $UserName = $_POST['UName'];
-      $Email = $_POST['Email'];
-      $Password = $_POST['password'];
-      $CPassword = $_POST['cpassword'];
+  		if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['btn_signup'])) {
+      			$firstname = $_POST['FName'];
+      			$lastname = $_POST['LName'];
+      			$username = $_POST['UName'];
+      			$email = $_POST['Email'];
+      			$password = $_POST['password'];
+      			$CPassword = $_POST['cpassword'];
 
-      $Errors=[];
+      			$errors=[];
 
-      //Check voor lege velden
-      if(empty($FirstName) || empty($LastName) || empty($UserName) || empty($Email) || empty($Password) || empty($CPassword))
-      {
-          $Errors[] = "Vul alle velden in!";
-      }
+      			//Check voor lege velden
+      			if(empty($firstname) || empty($lastname) || empty($username) || empty($email) || empty($password) || empty($CPassword)) {
+          			$errors[] = "Vul alle velden in!";
+      			}
 
-      // Check User Name Characters
-      if(!preg_match("/^[A-Za-z,0-9]*$/",$UserName))
-      {
-            $Errors[] = " Gebruikersnaam kan geen / * @ bezitten ";
-      }
+      			// Check User Name Characters
+      			if(!preg_match("/^[A-Za-z,0-9]*$/",$username)) {
+            			$errors[] = " Gebruikersnaam kan geen / * @ bezitten ";
+      			}
 
-      // Check Email Exists
-      if(!Email_Exist($Email))
-      {
-          $Errors[] = " Email al in gebruik ";
-      }
+      			// Check Email Exists
+      			if (!email_exist($email)) {
+          			$errors[] = " Email al in gebruik ";
+      			}
 
-      // Check User Exist
-      if(!User_Exists($UserName))
-      {
-          $Errors[] = " Gebruikersnaam al in gebruik ";
-      }
+      			// Check User Exist
+      			if(!user_exists($username)) {
+          			$errors[] = " Gebruikersnaam al in gebruik ";
+      			}
 
-      // Password Checking
-      if($Password!=$CPassword)
-      {
-          $Errors[] = " Zorg dat de wachtwoorden gelijk zijn! ";
-      }
+      			// Password Checking
+      			if($password!=$CPassword) {
+          			$errors[] = " Zorg dat de wachtwoorden gelijk zijn! ";
+      			}
 
-      if(!empty($Errors))
-      {
-          foreach($Errors as $display)
-          {
-              echo Error_Display($display);
-          }
-      }
+      			if(!empty($errors)) {
+          			foreach($errors as $display) {
+              				echo error_display($display);
+          			}
+      			}
 
-      else {
-              if(user_registration($FirstName,$LastName,$UserName,$Email,$Password))
-              {
-                  echo '<div class="alert alert-success"> Je hebt je success aanmgemeld. Check je email voor verificatie </div>';
-              }
-              else
-              {
-                  Error_Display(" Probeer het opnieuw er ging iets fout! ");
-              }
-           }
-  }
-}
+      			else {
+              			if(user_registration($firstname,$lastname,$username,$email,$password)) {
+                  			echo '<div class="alert alert-success"> Je hebt je success aanmgemeld. Check je email voor verificatie </div>';
+              			}
+              			else {
+                  			error_display(" Probeer het opnieuw er ging iets fout! ");
+              			}
+           		}
+  		}
+	}
 }
 
 
 /* ------------------------------- Gebruikers aanmaak functie ------------------------------ */
 
-function user_registration($FirstName,$LastName,$UserName,$Email,$Password)
+function user_registration($firstname,$lastname,$username,$email,$password)
 {
   $response = $_POST["g-recaptcha-response"];
 
@@ -192,16 +183,16 @@ function user_registration($FirstName,$LastName,$UserName,$Email,$Password)
 	} else if ($captcha_success->success==true) {
 
     global $mysqli;
-    $Validation_Code = md5($UserName+microtime());
-    $sql = "INSERT INTO users (UUID, FirstName, LastName, UserName, Email, Password, Validation_Code, Active) VALUES (UUID_TO_BIN(UUID()),?,?,?,?,?,?,'0')";
+    $validation_code = md5($username+microtime());
+    $sql = "INSERT INTO users (UUID, firstname, lastname, username, email, password, validation_code, active) VALUES (UUID_TO_BIN(UUID()),?,?,?,?,?,?,'0')";
     $stmt = mysqli_stmt_init($mysqli);
     if (!mysqli_stmt_prepare($stmt, $sql)){
       return false;
       exit();
     } else {
 
-      $hashedPwd = password_hash($Password, PASSWORD_DEFAULT);
-      mysqli_stmt_bind_param($stmt, "ssssss", $FirstName, $LastName, $UserName, $Email, $hashedPwd, $Validation_Code);
+      $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
+      mysqli_stmt_bind_param($stmt, "ssssss", $firstname, $lastname, $username, $email, $hashedPwd, $validation_code);
       mysqli_stmt_execute($stmt);
     }
   }
@@ -210,15 +201,15 @@ function user_registration($FirstName,$LastName,$UserName,$Email,$Password)
     $msg = "<html>";
     $msg .= "<body width:'600px';>";
     $msg .= '<h3> Verifieer uw account van /*Bedrijfsnaam*/ </h3>';
-    $msg .= '<h4>Hoi ' . $FirstName . '</h4>';
+    $msg .= '<h4>Hoi ' . $firstname . '</h4>';
     $msg .= '<p>Om jouw registratie te voltooien hoef je alleen nog maar op de knop hieronder te klikken om uw email te verifie&#235;ren</p>';
-    $msg .= '<a href="/*Activatie link*/' . $Email . '&Code=' . $Validation_Code . '">Verifieer E-mail</a>';
+    $msg .= '<a href="verifieer.php' . $email . '&Code=' . $validation_code . '">Verifieer E-mail</a>';
     $msg .= "</body></html>";
     $headers .= "From: /*Verstuurder*/\r\n";
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
-    Send_Email($Email,$subject,$msg,$headers);
+    send_email($email,$subject,$msg,$headers);
     return true;
     mysqli_stmt_close($stmt);
     mysqli_close($mysqli);
@@ -228,21 +219,21 @@ function user_registration($FirstName,$LastName,$UserName,$Email,$Password)
 /* ------------------------------- Verifieer account functie ------------------------------ */
 function activate()
 {
-    $Email = $_GET['Email'];
-    $Code = $_GET['Code'];
+    $email = $_GET['Email'];
+    $code = $_GET['Code'];
     global $mysqli;
-    $query = "SELECT * FROM users WHERE Email=? AND Validation_Code=?";
+    $query = "SELECT * FROM users WHERE email=? AND validation_code=?";
     $stmt = mysqli_stmt_init($mysqli);
     if (!mysqli_stmt_prepare($stmt, $query)) {
       return false;
       exit();
     } else {
-      mysqli_stmt_bind_param($stmt, "ss", $Email, $Code);
+      mysqli_stmt_bind_param($stmt, "ss", $email, $code);
       mysqli_stmt_execute($stmt);
       mysqli_stmt_store_result($stmt);
       $resultCheck = mysqli_stmt_num_rows($stmt);
       if ($resultCheck > 0) {
-          $up_query = "UPDATE users SET Active='1', Validation_Code='0' WHERE Email='$Email' AND Validation_Code='$Code'";
+          $up_query = "UPDATE users SET active='1', validation_code='0' WHERE email='$email' AND validation_code='$code'";
           $up_result = mysqli_query($mysqli,$up_query);
           echo '<div class="alert alert-success"> Uw account is geactiveerd <a href="login.php">Klik hier om in te loggen!</a></div>';
       } else {
@@ -257,53 +248,53 @@ function login_validation()
 {
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn-login'])) {
     global $mysqli;
-    $Email = mysqli_real_escape_string($mysqli, $_POST['Email']);
+    $email = mysqli_real_escape_string($mysqli, $_POST['Email']);
     $password = mysqli_real_escape_string($mysqli,$_POST['Password']);
-    $Remember = isset($_POST['remember']);
+    $remember = isset($_POST['remember']);
 
-    $Errors=[];
+    $errors=[];
 
-    if(empty($Email))
+    if(empty($email))
     {
-        $Errors[]= " Please Enter Your Email  ";
+        $errors[]= " Please Enter Your Email  ";
     }
 
     if(empty($password))
     {
-        $Errors[]= " Please Enter Your Password  ";
+        $errors[]= " Please Enter Your Password  ";
     }
 
-    if(!empty($Errors))
+    if(!empty($errors))
     {
-        foreach($Errors as $Display)
+        foreach($errors as $display)
         {
-            echo Error_Display($Display);
+            echo error_display($display);
         }
     }
     else
     {
-        if(login($Email,$password,$Remember))
+        if(login($email,$password,$remember))
         {
             header("location:admin.php");
         }
         else
         {
-            echo Error_Display(" Your Password or Email is Incorrect ");
+            echo error_display(" Your Password or Email is Incorrect ");
         }
     }
   }
 }
 
-function login($Email,$password,$Remember)
+function login($email,$password,$remember)
 {
   global $mysqli;
-  $sql = "SELECT * FROM users WHERE Email=? AND Active =1";
+  $sql = "SELECT * FROM users WHERE email=? AND active =1";
   $stmt = mysqli_stmt_init($mysqli);
   if (!mysqli_stmt_prepare($stmt, $sql)) {
     return false;
     exit();
   } else {
-    mysqli_stmt_bind_param($stmt, "s", $Email);
+    mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     if ($row = mysqli_fetch_assoc($result)) {
@@ -312,10 +303,10 @@ function login($Email,$password,$Remember)
         return false;
         exit();
       } else if ($pwdCheck == true){
-        if ($Remember == true) {
-          setcookie('Email',$Email, time() + 86400);
+        if ($remember == true) {
+          setcookie('Email',$email, time() + 86400);
         }
-        $_SESSION['Email']=$Email;
+        $_SESSION['Email']=$email;
         return true;
       } else {
         return false;
@@ -323,8 +314,4 @@ function login($Email,$password,$Remember)
     }
   }
 }
-
-
-/* ------------------------------- Wachtwoord vergeten functie ------------------------------ */
-
- ?>
+?>
