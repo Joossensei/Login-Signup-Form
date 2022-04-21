@@ -125,22 +125,22 @@ function form_validation()
 
       			// Check Email Exists
       			if (!email_exist($email)) {
-          			$Errors[] = " Email al in gebruik ";
+          			$errors[] = " Email al in gebruik ";
       			}
 
       			// Check User Exist
       			if(!user_exists($username)) {
-          			$Errors[] = " Gebruikersnaam al in gebruik ";
+          			$errors[] = " Gebruikersnaam al in gebruik ";
       			}
 
       			// Password Checking
       			if($password!=$CPassword) {
-          			$Errors[] = " Zorg dat de wachtwoorden gelijk zijn! ";
+          			$errors[] = " Zorg dat de wachtwoorden gelijk zijn! ";
       			}
 
       			if(!empty($errors)) {
           			foreach($errors as $display) {
-              				echo Error_Display($display);
+              				echo error_display($display);
           			}
       			}
 
@@ -183,7 +183,7 @@ function user_registration($firstname,$lastname,$username,$email,$password)
 	} else if ($captcha_success->success==true) {
 
     global $mysqli;
-    $Validation_Code = md5($UserName+microtime());
+    $validation_code = md5($username+microtime());
     $sql = "INSERT INTO users (UUID, firstname, lastname, username, email, password, validation_code, active) VALUES (UUID_TO_BIN(UUID()),?,?,?,?,?,?,'0')";
     $stmt = mysqli_stmt_init($mysqli);
     if (!mysqli_stmt_prepare($stmt, $sql)){
@@ -192,7 +192,7 @@ function user_registration($firstname,$lastname,$username,$email,$password)
     } else {
 
       $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
-      mysqli_stmt_bind_param($stmt, "ssssss", $firstName, $lastName, $username, $email, $hashedPwd, $validation_code);
+      mysqli_stmt_bind_param($stmt, "ssssss", $firstname, $lastname, $username, $email, $hashedPwd, $validation_code);
       mysqli_stmt_execute($stmt);
     }
   }
